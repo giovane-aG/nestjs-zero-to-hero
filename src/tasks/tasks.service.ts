@@ -18,4 +18,16 @@ export class TasksService {
     this.tasks.push(task);
     return task;
   }
+
+  async getAllTasks(): Promise<Task[]> {
+    return this.tasks;
+  }
+
+  async getTaskById(id: string): Promise<Task> {
+    return this.tasks.find((task) => task.id === id);
+  }
+
+  async deleteTask(id: string): Promise<void> {
+    this.tasks = this.tasks.filter((task) => task.id !== id);
+  }
 }
