@@ -47,15 +47,22 @@ export class TasksService {
   }
 
   async getTaskById(id: string): Promise<Task> {
-    return this.tasks.find((task) => task.id === id);
+    const foundTask = this.tasks.find((task) => task.id === id);
+
+    if (!foundTask) {
+      throw new NotFoundException(`No task with id ${id} was found`);
+    }
+
+    return foundTask;
   }
 
   async deleteTask(id: string): Promise<void> {
+    const task = await this.getTaskById(id);
     this.tasks = this.tasks.filter((task) => task.id !== id);
   }
 
   async patchTaskStatus(id: string, status: TaskStatus): Promise<void> {
-    const task = this.tasks.find((task) => task.id === id);
+    const task = await this.getTaskById(id);
 
     if (!task) {
       throw new NotFoundException('There is no tasks with the id informed');
