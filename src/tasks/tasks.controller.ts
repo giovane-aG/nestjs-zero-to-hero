@@ -18,10 +18,10 @@ import { TasksService } from './tasks.service';
 export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
 
-  // @Post()
-  // async createTask(@Body() createTaskDTO: CreateTaskDTO): Promise<Task> {
-  //   return await this.tasksService.createTask(createTaskDTO);
-  // }
+  @Post()
+  async createTask(@Body() createTaskDTO: CreateTaskDTO): Promise<Task> {
+    return await this.tasksService.createTask(createTaskDTO);
+  }
 
   @Get()
   async getTasks(
@@ -35,10 +35,10 @@ export class TasksController {
     return this.tasksService.getTaskById(id);
   }
 
-  @Delete('/:id')
-  async deleteTask(@Param('id') id: string): Promise<void> {
-    return this.tasksService.deleteTask(id);
-  }
+  // @Delete('/:id')
+  // async deleteTask(@Param('id') id: string): Promise<void> {
+  //   return this.tasksService.deleteTask(id);
+  // }
 
   @Patch('/:id/status')
   async patchTaskStatus(

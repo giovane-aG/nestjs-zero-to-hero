@@ -3,21 +3,27 @@ import { CreateTaskDTO } from './dtos/create-task.dto';
 import { TaskStatus } from './tasks.status';
 import { GetTasksFilterDTO } from './dtos/get-tasks-filter.dto';
 import { Task } from './task.entity';
+import { TasksRepository } from './tasks-repository';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class TasksService {
-  private tasks: Task[] = [];
+  constructor(
+    @InjectRepository(TasksRepository)
+    private readonly tasksRepository: TasksRepository,
+  ) {}
 
-  // async createTask(createTaskDTO: CreateTaskDTO): Promise<Task> {
-  //   const task: Task = {
-  //     title: createTaskDTO.title,
-  //     description: createTaskDTO.description,
-  //     status: TaskStatus.OPEN,
-  //   };
+  async createTask(createTaskDTO: CreateTaskDTO): Promise<Task> {
+    const task: Task = new Task();
+    const { title, description } = createTaskDTO;
 
-  //   this.tasks.push(task);
-  //   return task;
-  // }
+    task.title = title;
+    task.description = description;
+    task.status = TaskStatus.OPEN;
+
+    await this.tasksRepository.save(task);
+    return task;
+  }
 
   async getTasks(getTasksFilterDTO: GetTasksFilterDTO): Promise<Task[]> {
     let tasks = await this.getAllTasks();
@@ -42,11 +48,11 @@ export class TasksService {
   }
 
   async getAllTasks(): Promise<Task[]> {
-    return this.tasks;
+    return this.tasksRepository.find();
   }
 
   async getTaskById(id: string): Promise<Task> {
-    const foundTask = this.tasks.find((task) => task.id === id);
+    const foundTask = await this.tasksRepository.findOne(id);
 
     if (!foundTask) {
       throw new NotFoundException(`No task with id ${id} was found`);
@@ -56,8 +62,8 @@ export class TasksService {
   }
 
   async deleteTask(id: string): Promise<void> {
-    const task = await this.getTaskById(id);
-    this.tasks = this.tasks.filter((task) => task.id !== id);
+    const foundTask = await this.getTaskById(id);
+    await this.tasksRepository.delete({ id });
   }
 
   async patchTaskStatus(id: string, status: TaskStatus): Promise<void> {
