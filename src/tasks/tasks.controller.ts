@@ -11,17 +11,17 @@ import {
 import { CreateTaskDTO } from './dtos/create-task.dto';
 import { GetTasksFilterDTO } from './dtos/get-tasks-filter.dto';
 import { UpdateTaskStatusDTO } from './dtos/update-task-status.dto';
-import { Task } from './tasks.model';
+import { Task } from './task.entity';
 import { TasksService } from './tasks.service';
 
 @Controller('tasks')
 export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
 
-  @Post()
-  async createTask(@Body() createTaskDTO: CreateTaskDTO): Promise<Task> {
-    return await this.tasksService.createTask(createTaskDTO);
-  }
+  // @Post()
+  // async createTask(@Body() createTaskDTO: CreateTaskDTO): Promise<Task> {
+  //   return await this.tasksService.createTask(createTaskDTO);
+  // }
 
   @Get()
   async getTasks(

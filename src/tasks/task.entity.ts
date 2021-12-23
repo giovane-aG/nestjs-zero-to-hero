@@ -1,5 +1,5 @@
 import { Column, PrimaryGeneratedColumn } from 'typeorm';
-import { TaskStatus } from './tasks.model';
+import { TaskStatus } from './tasks.status';
 
 export class Task {
   @PrimaryGeneratedColumn('uuid')
