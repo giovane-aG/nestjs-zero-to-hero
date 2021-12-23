@@ -5,6 +5,7 @@ import { GetTasksFilterDTO } from './dtos/get-tasks-filter.dto';
 import { Task } from './task.entity';
 import { TasksRepository } from './tasks-repository';
 import { InjectRepository } from '@nestjs/typeorm';
+import { IdNotFoundException } from 'src/common/errors/id-not-found.exception';
 
 @Injectable()
 export class TasksService {
@@ -47,7 +48,7 @@ export class TasksService {
     const foundTask = await this.tasksRepository.findOne(id);
 
     if (!foundTask) {
-      throw new NotFoundException(`No task with id ${id} was found`);
+      throw new IdNotFoundException(id);
     }
 
     return foundTask;
@@ -56,17 +57,14 @@ export class TasksService {
   async deleteTask(id: string): Promise<void> {
     const result = await this.tasksRepository.delete(id);
     if (!result.affected) {
-      throw new NotFoundException(`No task if the id ${id} was found`);
+      throw new IdNotFoundException(id);
     }
   }
 
   async patchTaskStatus(id: string, status: TaskStatus): Promise<void> {
-    const task = await this.getTaskById(id);
-
-    if (!task) {
-      throw new NotFoundException('There is no tasks with the id informed');
+    const result = await this.tasksRepository.update(id, { status });
+    if (!result.affected) {
+      throw new IdNotFoundException(id);
     }
-
-    task.status = status;
   }
 }
