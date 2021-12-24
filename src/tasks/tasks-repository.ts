@@ -36,8 +36,6 @@ export class TasksRepository extends Repository<Task> {
       query.andWhere(`status = :status`, { status });
     }
 
-    console.log(query.getSql());
-
     return await query.getMany();
   }
 }
