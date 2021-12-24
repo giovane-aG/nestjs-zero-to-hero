@@ -1,5 +1,6 @@
 import { EntityRepository, Repository } from 'typeorm';
 import { CreateTaskDTO } from './dtos/create-task.dto';
+import { GetTasksFilterDTO } from './dtos/get-tasks-filter.dto';
 import { Task } from './task.entity';
 import { TaskStatus } from './tasks.status';
 
@@ -15,5 +16,28 @@ export class TasksRepository extends Repository<Task> {
 
     await this.save(task);
     return task;
+  }
+
+  async getTasks(taskFilterDTO: GetTasksFilterDTO): Promise<Task[]> {
+    const { search, status } = taskFilterDTO;
+
+    const query = this.createQueryBuilder('task');
+
+    if (search) {
+      query.andWhere(
+        `LOWER(title) LIKE LOWER(:search) OR LOWER(description) LIKE LOWER(:search)`,
+        {
+          search: `%${search}%`,
+        },
+      );
+    }
+
+    if (status) {
+      query.andWhere(`status = :status`, { status });
+    }
+
+    console.log(query.getSql());
+
+    return await query.getMany();
   }
 }
