@@ -2,6 +2,7 @@ import { ConflictException } from '@nestjs/common';
 import { EntityRepository, Repository } from 'typeorm';
 import { AuthCredentialsDTO } from './dtos/auth-credentials.dto';
 import { User } from './user.entity';
+import { hash, genSalt } from 'bcrypt';
 
 @EntityRepository(User)
 export class UsersRepository extends Repository<User> {
@@ -20,9 +21,12 @@ export class UsersRepository extends Repository<User> {
       );
     }
 
+    const salt = await genSalt();
+    const hashedPassword = await hash(password, salt);
+
     const user = new User();
     user.username = username;
-    user.password = password;
+    user.password = hashedPassword;
 
     await this.save(user);
   }
