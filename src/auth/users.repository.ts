@@ -1,9 +1,10 @@
-import { ConflictException } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { EntityRepository, Repository } from 'typeorm';
 import { AuthCredentialsDTO } from './dtos/auth-credentials.dto';
 import { User } from './user.entity';
 import { hash, genSalt } from 'bcrypt';
 
+@Injectable()
 @EntityRepository(User)
 export class UsersRepository extends Repository<User> {
   async getUserByUsername(username: string): Promise<User> {

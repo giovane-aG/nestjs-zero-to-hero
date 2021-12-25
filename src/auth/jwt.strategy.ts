@@ -9,7 +9,7 @@ import { JwtPayload } from './jwt-payload.interface';
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
-    @InjectRepository(User)
+    @InjectRepository(UsersRepository)
     private readonly usersRepository: UsersRepository,
   ) {
     super({
