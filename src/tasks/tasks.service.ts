@@ -6,6 +6,7 @@ import { Task } from './task.entity';
 import { TasksRepository } from './tasks-repository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IdNotFoundException } from 'src/common/errors/id-not-found.exception';
+import { User } from 'src/auth/user.entity';
 
 @Injectable()
 export class TasksService {
@@ -14,8 +15,8 @@ export class TasksService {
     private readonly tasksRepository: TasksRepository,
   ) {}
 
-  async createTask(createTaskDTO: CreateTaskDTO): Promise<Task> {
-    return this.tasksRepository.createTask(createTaskDTO);
+  async createTask(createTaskDTO: CreateTaskDTO, user: User): Promise<Task> {
+    return this.tasksRepository.createTask(createTaskDTO, user);
   }
 
   async getTasks(tasksFilterDTO: GetTasksFilterDTO): Promise<Task[]> {

@@ -1,5 +1,6 @@
 import { TaskStatus } from './tasks.status';
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { User } from 'src/auth/user.entity';
 
 @Entity()
 export class Task {
@@ -14,4 +15,7 @@ export class Task {
 
   @Column()
   status: TaskStatus;
+
+  @ManyToOne((_type) => User, (user) => user.tasks, { eager: false })
+  user: User;
 }
