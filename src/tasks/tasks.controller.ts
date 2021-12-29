@@ -55,9 +55,10 @@ export class TasksController {
   @Patch('/:id/status')
   async patchTaskStatus(
     @Param('id') id: string,
+    @GetUser() user: User,
     @Body() updateTaskStatusDTO: UpdateTaskStatusDTO,
   ): Promise<void> {
     const { status } = updateTaskStatusDTO;
-    return this.tasksService.patchTaskStatus(id, status);
+    return this.tasksService.patchTaskStatus(id, status, user);
   }
 }

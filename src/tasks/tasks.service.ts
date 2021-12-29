@@ -50,8 +50,12 @@ export class TasksService {
     }
   }
 
-  async patchTaskStatus(id: string, status: TaskStatus): Promise<void> {
-    const result = await this.tasksRepository.update(id, { status });
+  async patchTaskStatus(
+    id: string,
+    status: TaskStatus,
+    user: User,
+  ): Promise<void> {
+    const result = await this.tasksRepository.update({ id, user }, { status });
     if (!result.affected) {
       throw new IdNotFoundException(id);
     }
