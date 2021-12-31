@@ -5,8 +5,8 @@ import { GetTasksFilterDTO } from './dtos/get-tasks-filter.dto';
 import { Task } from './task.entity';
 import { TasksRepository } from './tasks-repository';
 import { InjectRepository } from '@nestjs/typeorm';
-import { IdNotFoundException } from 'src/common/errors/id-not-found.exception';
-import { User } from 'src/auth/user.entity';
+import { IdNotFoundException } from '../common/errors/id-not-found.exception';
+import { User } from '../auth/user.entity';
 
 @Injectable()
 export class TasksService {
