@@ -1,9 +1,11 @@
 import { Test } from '@nestjs/testing';
 import { TasksRepository } from './tasks-repository';
 import { TasksService } from './tasks.service';
+import { TaskStatus } from './tasks.status';
 
 const mockTasksRepository = () => ({
   getTasks: jest.fn(),
+  findOne: jest.fn(),
 });
 
 const mockUser = {
@@ -35,5 +37,22 @@ describe('Tasks Service', () => {
       const result = await tasksService.getTasks(null, mockUser);
       expect(result).toEqual('someValue');
     });
+  });
+
+  describe('getTaskById', () => {
+    it('calls TaskRepository.findOne and returns the result', async () => {
+      const mockTask = {
+        id: 'someId',
+        title: 'Test title',
+        description: 'Test desc',
+        status: TaskStatus.OPEN,
+      };
+
+      tasksRepository.findOne.mockResolvedValue(mockTask);
+      const result = await tasksService.getTaskById('someId', mockUser);
+      expect(result).toEqual(mockTask);
+    });
+
+    // it('calls TaskRepository.findOne and throws an error', async () => {});
   });
 });
