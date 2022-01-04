@@ -1,3 +1,4 @@
+import { NotFoundException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { TasksRepository } from './tasks-repository';
 import { TasksService } from './tasks.service';
@@ -53,6 +54,11 @@ describe('Tasks Service', () => {
       expect(result).toEqual(mockTask);
     });
 
-    // it('calls TaskRepository.findOne and throws an error', async () => {});
+    it('calls TaskRepository.findOne and throws an error', async () => {
+      tasksRepository.findOne.mockResolvedValue(null);
+
+      const result = tasksService.getTaskById('someId', mockUser);
+      expect(result).rejects.toThrow(NotFoundException);
+    });
   });
 });
